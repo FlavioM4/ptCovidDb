@@ -21,25 +21,27 @@ class CovidData:
 		print("Deaths: ", self.deaths)
 		print("Recovered: ", self.recovered)
 
-def printComparisons(sars, yestersars, cdif, adif, ddif, rdif):
-	print("Todays confirmed cases: ", sars.confirmed, ". More ", cdif, " cases than the last check.")
+def printComparisons(sars, yestersars, cdif, adif, ddif, rdif, lastCheck):
+	print("Todays confirmed cases: ", sars.confirmed, ". More ", cdif, " cases since ", lastCheck)
 	if sars.active > yestersars.active:
-		print("Todays active cases: ", sars.active, ". More ", adif, " active cases than the last check.")
+		print("Todays active cases: ", sars.active, ". More ", adif, " active cases since ", lastCheck)
 	else:
-		print("Todays active cases: ", sars.active, ". Less ", adif, " active cases than the last check.")
-	print("Total deaths: ", sars.deaths, ". More ", ddif, " deaths than yesterday")
-	print("Todays recovered: ", sars.recovered, ". More ", rdif, " recovered than the last check.")
+		print("Todays active cases: ", sars.active, ". Less ", adif, " active cases since ", lastCheck)
+	print("Total deaths: ", sars.deaths, ". More ", ddif, " deaths since ", )
+	print("Todays recovered: ", sars.recovered, ". More ", rdif, " recovered since ", lastCheck)
 
 
 def compareNumbers(sars):
 	yesterdata = cursor.execute("SELECT * FROM covidNumbers ORDER BY dateOf ASC LIMIT 1")
 	dados = cursor.fetchone()
+	lastCheck = dados[4]
+	print(lastCheck)
 	yestersars = CovidData(dados[0], dados[1], dados[2], dados[3])
 	confDif = sars.confirmed - yestersars.confirmed
 	actDif = sars.active - yestersars.active
 	deaDif = sars.deaths - yestersars.deaths
 	recoDif = sars.recovered - yestersars.recovered
-	printComparisons(sars, yestersars, confDif, actDif, deaDif, recoDif)
+	printComparisons(sars, yestersars, confDif, actDif, deaDif, recoDif,lastCheck)
 
 def checkLastDay(sars):
 	cursor.execute("SELECT * FROM covidNumbers")
@@ -86,4 +88,6 @@ def checkNumbers():
 	sars = CovidData(data['confirmed'], data['active'], data['deaths'], data['recovered'])
 	checkTable(sars)
 	
+def lastCheck():
+	cursor.execute("SELECT")
 checkNumbers()
